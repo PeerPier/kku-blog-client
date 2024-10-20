@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import "./Navbar.css";
 import logoKKU from "../pic/logo-head.jpg";
 import { Link, useNavigate } from "react-router-dom";
@@ -7,12 +7,10 @@ import { LuFileEdit } from "react-icons/lu";
 import { UserContext } from "../App";
 import { IoNotificationsOutline } from "react-icons/io5";
 import UserNavigationPanel from "../components/user-navigation.component";
-import UserNotificationPanel from "../components/notification.component";
 
 function Navbar() {
   const [searchBoxVisibility, setSearchBoxVisibility] = useState(false);
   const [userNavPanel, setUserNavPanel] = useState(false);
-  const [userNotiPanel, setUserNotiPanel] = useState(false);
   const navigate = useNavigate();
 
   const {
@@ -21,10 +19,6 @@ function Navbar() {
 
   const handleNavpanel = () => {
     setUserNavPanel((currentVal) => !currentVal);
-  };
-
-  const handleNotiPanel = () => {
-    setUserNotiPanel((currentVal) => !currentVal);
   };
 
   const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -39,12 +33,6 @@ function Navbar() {
   const handleBlur = () => {
     setTimeout(() => {
       setUserNavPanel(false);
-    }, 200);
-  };
-
-  const handleNotiBlur = () => {
-    setTimeout(() => {
-      setUserNotiPanel(false);
     }, 200);
   };
 
@@ -84,22 +72,14 @@ function Navbar() {
 
         {access_token ? (
           <>
-            {/* <Link to="/dashboard/notification"> */}
-            <div
-              className="relative"
-              style={{ position: "relative" }}
-              onClick={handleNotiPanel}
-              onBlur={handleNotiBlur}
-            >
+            <Link to="/dashboard/notification">
               <button className="button-noti">
                 <IoNotificationsOutline
                   className=" d-block"
                   style={{ fontSize: "1.5rem" }}
                 />
               </button>
-              {userNotiPanel ? <UserNotificationPanel /> : ""}
-            </div>
-            {/* </Link> */}
+            </Link>
 
             <div
               className="relative"

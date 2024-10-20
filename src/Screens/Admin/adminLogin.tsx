@@ -11,7 +11,6 @@ import {
   userInSession,
   userIdInSession,
 } from "../../common/session";
-import { API_BASE_URL } from "../../api/const/apiBaseUrl";
 
 interface LoginPageProps {
   type: string;
@@ -19,6 +18,7 @@ interface LoginPageProps {
 
 const Login: React.FC<LoginPageProps> = ({ type }) => {
   const authForm = useRef<HTMLFormElement>(null);
+  const API_URL = process.env.PUBLIC_APP_ENDPOINT || "https://kku-blog-server.onrender.com";
   const navigate = useNavigate();
 
   const {
@@ -34,7 +34,7 @@ const Login: React.FC<LoginPageProps> = ({ type }) => {
     serverRoute: string,
     formData: { [key: string]: any }
   ) => {
-    fetch(API_BASE_URL + serverRoute, {
+    fetch(API_URL + serverRoute, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -49,15 +49,13 @@ const Login: React.FC<LoginPageProps> = ({ type }) => {
         }
         return response.json();
       })
-      .then((data): any => {
+      .then((data) => {
         storeInSession("user", JSON.stringify(data));
         setUserAuth(data);
         userInSession("userId", data.username);
         userIdInSession("adminId", data._id);
 
         console.log("data.role", data);
-
-        localStorage.setItem("userId", data._id);
 
         if (data.role === "admin") {
           navigate(`/admin/${data._id}`);
@@ -165,8 +163,8 @@ const Login: React.FC<LoginPageProps> = ({ type }) => {
                   <img src={logohead} alt="easyclass" />
                 </div>
 
-                <div className="heading" style={{textAlign:"center"}}>
-                  <h4>ยินดีต้อนรับผู้ดูแลระบบ</h4>
+                <div className="heading">
+                  <h2>ยินดีต้อนรับผู้ดูแลระบบ</h2>
                 </div>
 
                 <div className="actual-form">
@@ -207,6 +205,41 @@ const Login: React.FC<LoginPageProps> = ({ type }) => {
               </form>
             </div>
 
+            <div className="carousell">
+              <div className="images-wrapper">
+                <img
+                  src="../../pic/image1.png"
+                  className="image img-1 show"
+                  alt=""
+                />
+                <img
+                  src="../../pic/image2.png"
+                  className="image img-2"
+                  alt=""
+                />
+                <img
+                  src="../../pic/image3.png"
+                  className="image img-3"
+                  alt=""
+                />
+              </div>
+
+              <div className="text-slider">
+                <div className="text-wrap">
+                  <div className="text-group">
+                    <h2>สร้างประสบการณ์ของคุณเอง</h2>
+                    <h2>แลกเปลี่ยนความคิดเห็นกับผู้อื่น</h2>
+                    <h2>หาความรู้กับบุคคลทั่วไป</h2>
+                  </div>
+                </div>
+
+                <div className="bullets">
+                  <span className="active" data-value="1"></span>
+                  <span data-value="2"></span>
+                  <span data-value="3"></span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </main>

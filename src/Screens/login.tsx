@@ -5,7 +5,6 @@ import logohead from "../pic/logo-headV2.png";
 import bglogin from "../pic/bg1.png";
 import "../misc/login.css";
 import { Link } from "react-router-dom";
-import { API_BASE_URL } from "../api/const/apiBaseUrl";
 
 const Login: React.FC = () => {
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
@@ -100,7 +99,7 @@ const Login: React.FC = () => {
 
   const handleLogin = useCallback(async () => {
     try {
-      const url = `${API_BASE_URL}/login`;
+      const url = `http://localhost:3001/login`;
 
       const response = await fetch(url, {
         method: "POST",
@@ -178,7 +177,7 @@ const Login: React.FC = () => {
         date_of_birth,
       };
 
-      const response = await fetch(`${API_BASE_URL}/login`, {
+      const response = await fetch("http://localhost:3001/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

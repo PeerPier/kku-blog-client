@@ -1,11 +1,11 @@
-import { API_BASE_URL } from "./const/apiBaseUrl"
+const API_BASE_URL = process.env.PUBLIC_APP_ENDPOINT || "https://kku-blog-server.onrender.com";
 
 // Function to fetch all questions
 export const fetchQuestionsAPI = async () => {
-  const token = localStorage.getItem("userId")
+  const token = localStorage.getItem("userId");
   if (!token) {
-    console.error("No token found, redirecting to login...")
-    return null
+    console.error("No token found, redirecting to login...");
+    return null;
   }
 
   const response = await fetch(`${API_BASE_URL}/api/questions`, {
@@ -14,15 +14,15 @@ export const fetchQuestionsAPI = async () => {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-  })
+  });
 
   if (!response.ok) {
-    throw new Error("Failed to fetch questions")
+    throw new Error("Failed to fetch questions");
   }
 
-  const data = await response.json()
-  return data
-}
+  const data = await response.json();
+  return data;
+};
 
 // Function to add a new question
 export const addQuestionAPI = async (
@@ -30,10 +30,10 @@ export const addQuestionAPI = async (
   answer: string,
   createdBy: string
 ) => {
-  const token = localStorage.getItem("userId")
+  const token = localStorage.getItem("userId");
   if (!token) {
-    console.error("No token found, redirecting to login...")
-    return null
+    console.error("No token found, redirecting to login...");
+    return null;
   }
 
   const response = await fetch(`${API_BASE_URL}/api/questions`, {
@@ -43,15 +43,15 @@ export const addQuestionAPI = async (
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({ topic, answer, createdBy }),
-  })
+  });
 
   if (!response.ok) {
-    throw new Error("Failed to add question")
+    throw new Error("Failed to add question");
   }
 
-  const data = await response.json()
-  return data
-}
+  const data = await response.json();
+  return data;
+};
 
 // Function to update a question
 export const updateQuestionAPI = async (
@@ -59,10 +59,10 @@ export const updateQuestionAPI = async (
   topic: string,
   answer: string
 ) => {
-  const token = localStorage.getItem("userId") // Get token from localStorage
+  const token = localStorage.getItem("userId"); // Get token from localStorage
 
   if (!token) {
-    throw new Error("No admin token found. Unauthorized request.")
+    throw new Error("No admin token found. Unauthorized request.");
   }
 
   const response = await fetch(`${API_BASE_URL}/api/questions/${id}`, {
@@ -72,22 +72,22 @@ export const updateQuestionAPI = async (
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({ topic, answer }), // Send the updated data
-  })
+  });
 
   if (!response.ok) {
-    throw new Error("Failed to update question")
+    throw new Error("Failed to update question");
   }
 
-  const data = await response.json()
-  return data // Return the updated question
-}
+  const data = await response.json();
+  return data; // Return the updated question
+};
 
 // Function to delete a question
 export const deleteQuestionAPI = async (id: string) => {
-  const token = localStorage.getItem("userId")
+  const token = localStorage.getItem("userId");
   if (!token) {
-    console.error("No token found, redirecting to login...")
-    return null
+    console.error("No token found, redirecting to login...");
+    return null;
   }
 
   const response = await fetch(`${API_BASE_URL}/api/questions/${id}`, {
@@ -96,9 +96,9 @@ export const deleteQuestionAPI = async (id: string) => {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-  })
+  });
 
   if (!response.ok) {
-    throw new Error("Failed to delete question")
+    throw new Error("Failed to delete question");
   }
-}
+};

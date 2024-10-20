@@ -4,7 +4,6 @@ import axios, { AxiosResponse } from "axios";
 import Cookies from "js-cookie";
 import { Link, useNavigate } from "react-router-dom";
 import { getDay } from "../../common/date";
-import { API_BASE_URL } from "../../api/const/apiBaseUrl";
 
 interface Report {
   _id: string;
@@ -65,6 +64,9 @@ const ReportDetailsModal: React.FC<ReportDetailsModalProps> = ({
   report,
   refreshReports,
 }) => {
+  const navigate = useNavigate();
+  const API_BASE_URL = process.env.PUBLIC_APP_ENDPOINT || "https://kku-blog-server.onrender.com";
+
   const verifyReport = async (
     reportId: string,
     isVerified: boolean

@@ -4,7 +4,7 @@ import { BlogContext } from "../Screens/blog.page";
 import { MdClose } from "react-icons/md";
 import CommentField from "./comment-field.component";
 import axios from "axios";
-import { API_BASE_URL } from "../api/const/apiBaseUrl";
+import { API_BASE_URL } from "../api/post";
 import NoDataMessage from "./nodata.component";
 import AnimationWrapper from "../Screens/page-animation";
 import CommentCard from "./commentcard.component";

@@ -1,28 +1,28 @@
-import AnimationWrapper from "./page-animation"
-import InPageNavigation from "../components/Inpage-navigation"
-import axios from "axios"
-import React, { useEffect, useState } from "react"
-import Loader from "../components/loader.component"
-import { Post } from "../types/post"
-import BlogCard from "../components/blogpost.component"
-import MinimalBlogPost from "./nobanner-blog"
-import { MdAutoGraph } from "react-icons/md"
-import { activeTabRef } from "../components/Inpage-navigation"
-import NoDataMessage from "../components/nodata.component"
-import { filterPaginationData } from "../components/filter-pagination"
-import LoadMoreDataBtn from "../components/load-more.component"
-import { API_BASE_URL } from "../api/const/apiBaseUrl"
+import AnimationWrapper from "./page-animation";
+import InPageNavigation from "../components/Inpage-navigation";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import Loader from "../components/loader.component";
+import { Post } from "../types/post";
+import BlogCard from "../components/blogpost.component";
+import MinimalBlogPost from "./nobanner-blog";
+import { MdAutoGraph } from "react-icons/md";
+import { activeTabRef } from "../components/Inpage-navigation";
+import NoDataMessage from "../components/nodata.component";
+import { filterPaginationData } from "../components/filter-pagination";
+import LoadMoreDataBtn from "../components/load-more.component";
 
 interface BlogState {
-  result: Post[]
-  totalDocs: number
-  page: number
+  result: Post[];
+  totalDocs: number;
+  page: number;
 }
 
 const HomePage = () => {
-  const [blogs, setBlogs] = useState<BlogState | null>(null)
-  const [trendingBlogs, setTrendingBlogs] = useState<Post[] | null>(null)
-  const [pageState, setPageState] = useState("หน้าหลัก")
+  const API_URL = process.env.PUBLIC_APP_ENDPOINT || "https://kku-blog-server.onrender.com";
+  const [blogs, setBlogs] = useState<BlogState | null>(null);
+  const [trendingBlogs, setTrendingBlogs] = useState<Post[] | null>(null);
+  const [pageState, setPageState] = useState("หน้าหลัก");
   const category = [
     "มข",
     "กีฬา",
@@ -32,43 +32,43 @@ const HomePage = () => {
     "รีวิว",
     "ร้านอาหาร",
     "Blog",
-  ]
+  ];
 
   const loadBlogBycategory = (e: React.MouseEvent<HTMLButtonElement>) => {
     const categories = (
       e.currentTarget as HTMLButtonElement
-    ).innerText.toLowerCase()
-    setBlogs(null)
+    ).innerText.toLowerCase();
+    setBlogs(null);
 
     if (pageState === categories) {
-      setPageState("หน้าหลัก")
-      return
+      setPageState("หน้าหลัก");
+      return;
     }
-    setPageState(categories)
-  }
+    setPageState(categories);
+  };
 
   const fetchLatestBlogs = ({ page = 1 }) => {
     axios
-      .post(API_BASE_URL + "/posts/latest-blog", { page })
+      .post(API_URL + "/posts/latest-blog", { page })
       .then(async ({ data }) => {
-        console.log(data.blogs)
+        console.log(data.blogs);
 
         let formatData = await filterPaginationData({
           state: blogs,
           data: data.blogs,
           page,
           countRoute: "/posts/all-latest-blogs-count",
-        })
-        setBlogs(formatData)
+        });
+        setBlogs(formatData);
       })
-      .catch(err => {
-        console.log(err)
-      })
-  }
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   const fetchBlogsByCategory = ({ page = 1 }) => {
     axios
-      .post(API_BASE_URL + "/search-blogs", { tag: pageState, page })
+      .post(API_URL + "/search-blogs", { tag: pageState, page })
       .then(async ({ data }) => {
         let formatData = await filterPaginationData({
           state: blogs,
@@ -76,47 +76,47 @@ const HomePage = () => {
           page,
           countRoute: "/search-blogs-count",
           data_to_send: { tag: pageState },
-        })
+        });
 
-        setBlogs(formatData)
+        setBlogs(formatData);
       })
-      .catch(err => {
-        console.log(err)
-      })
-  }
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   const fetchTrendingBlogs = () => {
     axios
-      .get(API_BASE_URL + "/posts/trending-blogs")
+      .get(API_URL + "/posts/trending-blogs")
       .then(({ data }) => {
-        setTrendingBlogs(data.blogs)
+        setTrendingBlogs(data.blogs);
       })
-      .catch(err => {
-        console.log(err)
-      })
-  }
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   useEffect(() => {
-    activeTabRef.current?.click()
+    activeTabRef.current?.click();
 
     if (pageState === "หน้าหลัก") {
-      fetchLatestBlogs({ page: 1 })
+      fetchLatestBlogs({ page: 1 });
     } else {
-      fetchBlogsByCategory({ page: 1 })
+      fetchBlogsByCategory({ page: 1 });
     }
 
     if (!trendingBlogs) {
-      fetchTrendingBlogs()
+      fetchTrendingBlogs();
     }
-  }, [pageState])
+  }, [pageState]);
 
   return (
     <AnimationWrapper>
       <section
-        className='h-cover d-flex justify-content-center'
+        className="h-cover d-flex justify-content-center"
         style={{ gap: "2.5rem" }}
       >
-        <div className='w-100'>
+        <div className="w-100">
           <InPageNavigation
             routes={[pageState, "บล็อกยอดนิยม"]}
             defaultHidden={["บล็อกยอดนิยม"]}
@@ -133,10 +133,10 @@ const HomePage = () => {
                     >
                       <BlogCard content={blog} author={blog.author} />
                     </AnimationWrapper>
-                  )
+                  );
                 })
               ) : (
-                <NoDataMessage message='ไม่มีบล็อกที่เผยแพร่' />
+                <NoDataMessage message="ไม่มีบล็อกที่เผยแพร่" />
               )}
               <LoadMoreDataBtn
                 state={blogs}
@@ -158,19 +158,19 @@ const HomePage = () => {
                   >
                     <MinimalBlogPost blog={blog} index={i} />
                   </AnimationWrapper>
-                )
+                );
               })
             ) : (
-              <NoDataMessage message='ไม่มีบล็อกที่ติดเทรนด์' />
+              <NoDataMessage message="ไม่มีบล็อกที่ติดเทรนด์" />
             )}
           </InPageNavigation>
         </div>
-        <div className='trending-blog'>
-          <div className='d-flex flex-column gap-3 '>
+        <div className="trending-blog">
+          <div className="d-flex flex-column gap-3 ">
             <div>
-              <h1 className='fw-medium mb-3 fs-5'>เรื่องราวที่อาจสนใจ</h1>
+              <h1 className="fw-medium mb-3 fs-5">เรื่องราวที่อาจสนใจ</h1>
 
-              <div className='d-flex gap-3 flex-wrap'>
+              <div className="d-flex gap-3 flex-wrap">
                 {category.map((categories, i) => {
                   return (
                     <button
@@ -183,13 +183,13 @@ const HomePage = () => {
                     >
                       {categories}
                     </button>
-                  )
+                  );
                 })}
               </div>
             </div>
 
             <div>
-              <h1 className='fw-medium mb-3 fs-5'>
+              <h1 className="fw-medium mb-3 fs-5">
                 Trending <MdAutoGraph />
               </h1>
 
@@ -204,17 +204,17 @@ const HomePage = () => {
                     >
                       <MinimalBlogPost blog={blog} index={i} />
                     </AnimationWrapper>
-                  )
+                  );
                 })
               ) : (
-                <NoDataMessage message='ไม่มีบล็อกที่ติดเทรนด์' />
+                <NoDataMessage message="ไม่มีบล็อกที่ติดเทรนด์" />
               )}
             </div>
           </div>
         </div>
       </section>
     </AnimationWrapper>
-  )
-}
+  );
+};
 
-export default HomePage
+export default HomePage;

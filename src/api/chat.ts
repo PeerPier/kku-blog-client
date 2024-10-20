@@ -1,3 +1,5 @@
+export const API_BASE_URL = process.env.PUBLIC_APP_ENDPOINT || "https://kku-blog-server.onrender.com";
+
 export const postRequest = async (url: string, body: any) => {
   const response = await fetch(url, {
     method: "POST",
@@ -5,36 +7,36 @@ export const postRequest = async (url: string, body: any) => {
       "Content-Type": "application/json",
     },
     body: body,
-  })
+  });
 
-  const data = await response.json()
+  const data = await response.json();
 
   if (!response.ok) {
-    let message
+    let message;
     if (data?.message) {
-      message = data.message
+      message = data.message;
     } else {
-      message = data
+      message = data;
     }
-    return { error: true, message }
+    return { error: true, message };
   }
-  return data
-}
+  return data;
+};
 
 export const getRequest = async (
   url: string
 ): Promise<{ error: boolean; message: string } | any> => {
-  const response = await fetch(url)
+  const response = await fetch(url);
 
-  const data = await response.json()
+  const data = await response.json();
   if (!response.ok) {
-    let message = "An error occurred..."
+    let message = "An error occurred...";
 
     if (data?.message) {
-      message = data.message
+      message = data.message;
     }
-    return { error: true, message }
+    return { error: true, message };
   }
 
-  return data
-}
+  return data;
+};

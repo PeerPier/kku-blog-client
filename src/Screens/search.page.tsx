@@ -8,11 +8,11 @@ import BlogCard from "../components/blogpost.component";
 import NoDataMessage from "../components/nodata.component";
 import LoadMoreDataBtn from "../components/load-more.component";
 import axios from "axios";
+import { API_BASE_URL } from "../api/post";
 import { filterPaginationData } from "../components/filter-pagination";
 import { User } from "../types/user";
 import UserCard from "../components/usercard.component";
 import { LuUser2 } from "react-icons/lu";
-import { API_BASE_URL } from "../api/const/apiBaseUrl";
 
 interface BlogState {
   result: Post[];

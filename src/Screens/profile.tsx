@@ -19,7 +19,6 @@ import { FollowerModal } from "./follower-modal";
 import { deleteSave, likePost, savePost } from "../api/post";
 import { Post } from "../types/post";
 import { GoHeartFill } from "react-icons/go";
-import { API_BASE_URL } from "../api/const/apiBaseUrl";
 
 const Profile = () => {
   const { id } = useParams<{ id: string }>();
@@ -75,9 +74,9 @@ const Profile = () => {
   }, [id]);
 
   const handleFollow = useCallback(async () => {
-    const URL = `${API_BASE_URL}/follow`;
+    const API_BASE_URL = "http://localhost:3001/follow";
     try {
-      const response = await fetch(URL, {
+      const response = await fetch(API_BASE_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -99,7 +98,7 @@ const Profile = () => {
   }, [id, isFollowing]);
 
   const handleUnfollow = useCallback(async () => {
-    const API_BASE_URL_DELETE = `${API_BASE_URL}/follow/delete`;
+    const API_BASE_URL_DELETE = "http://localhost:3001/follow/delete";
     try {
       const response = await fetch(API_BASE_URL_DELETE, {
         method: "DELETE",
