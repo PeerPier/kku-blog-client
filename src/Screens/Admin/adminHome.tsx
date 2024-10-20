@@ -33,6 +33,7 @@ import ReportDetailsModal from "./approve-modal";
 import { Button } from "react-bootstrap";
 import { Line } from "react-chartjs-2"; // ใช้แสดงกราฟ Line
 import "chart.js/auto"; // สำหรับการใช้งาน Chart.js
+import { API_BASE_URL } from "../../api/const/apiBaseUrl";
 
 interface Report {
   _id: string;
@@ -81,12 +82,10 @@ interface Report {
 }
 
 const AdminHome: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
-  const API_BASE_URL = process.env.PUBLIC_APP_ENDPOINT || "https://kku-blog-server.onrender.com";
+  const { adminId } = useParams<{ adminId: string }>();
 
   const [adminProfile, setAdminProfile] = useState<any>(true);
   const adminUsername = sessionStorage.getItem("userId");
-
   const [userCounter, setUserCounter] = useState<number>(0);
   const [postCounter, setPostCounter] = useState<number>(0);
   const [totalViews, setTotalViews] = useState<number>(0);
@@ -205,8 +204,8 @@ const AdminHome: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (id) {
-          const profileData = await fetchAdminProfile(id);
+        if (adminId) {
+          const profileData = await fetchAdminProfile(adminId);
           setUsername(profileData.username);
           setAdminProfile(profileData);
           setEmail(profileData.email);
@@ -220,7 +219,7 @@ const AdminHome: React.FC = () => {
     };
 
     fetchData();
-  }, [id]);
+  }, [adminId]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -302,7 +301,7 @@ const AdminHome: React.FC = () => {
   const [isUserHovered, setIsUserHovered] = useState(false);
   const [isViewHovered, setIsViewHovered] = useState(false);
 
-  const monthsUser = [
+  let monthsUser = [
     { month: "January", joinAt: 0 },
     { month: "February", joinAt: 0 },
     { month: "March", joinAt: 0 },
@@ -317,7 +316,7 @@ const AdminHome: React.FC = () => {
     { month: "December", joinAt: 0 },
   ];
 
-  const monthsPost = [
+  let monthsPost = [
     { month: "January", publishedAt: 0 },
     { month: "February", publishedAt: 0 },
     { month: "March", publishedAt: 0 },
@@ -333,15 +332,20 @@ const AdminHome: React.FC = () => {
   ];
 
   getUser?.forEach((user: any) => {
-    const date = new Date(user.joinedAt);
+    const date = new Date(user.joinedAt || user.createdAt);
     const monthIndex = date.getUTCMonth();
-    monthsUser[monthIndex].joinAt += 1;
+    if (!isNaN(monthIndex)) {
+      monthsUser[monthIndex].joinAt += 1;
+    }
   });
 
   getBlog?.forEach((blog: any) => {
     const publishedDate = new Date(blog.publishedAt);
     const monthIndex = publishedDate.getMonth();
-    monthsPost[monthIndex].publishedAt += 1;
+    if (!isNaN(monthIndex)) {
+      monthsPost[monthIndex].publishedAt += 1;
+    }
+    
   });
 
   // ข้อมูลตัวอย่างสำหรับกราฟ

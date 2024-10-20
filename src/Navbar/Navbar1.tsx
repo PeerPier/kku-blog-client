@@ -26,6 +26,7 @@ import { searchPost } from "../api/search";
 import { Dropdown } from "react-bootstrap";
 import { FaUser } from "react-icons/fa";
 import axios from "axios";
+import { API_BASE_URL } from "../api/const/apiBaseUrl";
 
 const cates = ["Piyarat U", "ท่องเที่ยว", "Pearr"].map((name, index) => ({
   name,
@@ -224,7 +225,7 @@ const Navbar1: React.FC<Navbar1Props> = ({ children }) => {
     e.preventDefault();
     try {
       await axios.patch(
-        `http://localhost:3001/notifications/${notificationId}/mark-as-read`
+        `${API_BASE_URL}/notifications/${notificationId}/mark-as-read`
       );
       setNotifications((prevNotifications) =>
         prevNotifications.map((notification) =>
@@ -245,7 +246,7 @@ const Navbar1: React.FC<Navbar1Props> = ({ children }) => {
     const fetchNotifications = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3001/notifications?userId=${userId}`
+          `${API_BASE_URL}/notifications?userId=${userId}`
         );
         setNotifications(response.data);
       } catch (error) {

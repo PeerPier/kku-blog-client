@@ -11,7 +11,7 @@ import {
 } from "../../api/manageQAPI";
 
 const ManageQ: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
+  const { adminId } = useParams<{ adminId: string }>();
   const [questions, setQuestions] = useState<any[]>([]);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -38,16 +38,16 @@ const ManageQ: React.FC = () => {
     loadQuestions();
   }, []);
 
-  const handleAddQuestion = async (e: React.FormEvent) => {
+  const handleAddQuestion = async (e: React.FormEvent, adminId?: string) => {
     e.preventDefault();
 
-    if (!id) {
+    if (!adminId) {
       console.error("Admin ID is undefined");
       return;
     }
 
     try {
-      const newQuestion = await addQuestionAPI(topic, answer, id);
+      const newQuestion = await addQuestionAPI(topic, answer, adminId);
       setQuestions((prev) => [...prev, newQuestion]);
       setTopic("");
       setAnswer("");
@@ -178,8 +178,8 @@ const ManageQ: React.FC = () => {
           <Button variant="secondary" onClick={() => setShowAddModal(false)}>
             Cancel
           </Button>
-          <Button variant="primary" onClick={handleAddQuestion}>
-            Save
+          <Button variant="primary" onClick={(e) => handleAddQuestion(e,adminId)}>
+            Sav
           </Button>
         </Modal.Footer>
       </Modal>

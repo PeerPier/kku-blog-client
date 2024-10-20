@@ -14,7 +14,7 @@ import RegisterAdmin from "./Screens/Admin/adminRegister";
 import Writepost from "./Screens/post";
 // import Content from "./Screens/Content";
 import AdminHome from "./Screens/Admin/adminHome";
-
+import AccountPreferences from "./Screens/AccountPreferences";
 import Sidebar from "./Screens/sidebar";
 import Settingtest from "./Screens/settingtest";
 import Category from "./Screens/category";
@@ -99,8 +99,8 @@ function App() {
             <Route path="/search/:query" element={<SearchPage />} />
             <Route path="*" element={<PageNotFound />} />
             <Route path="/user/:id" element={<ProfilePage />} />
+            <Route path="/account/preference/:id" element={<AccountPreferences />} />
             <Route path="/blog/:blog_id" element={<BlogPage />}></Route>
-
             <Route path="/test" element={<TestPage />} />
             <Route path="/profile/:id" element={<Profile />} />
             <Route path="/profile/edit-profile/:id" element={<EditProfile />} />
@@ -123,10 +123,7 @@ function App() {
           <Route path="/admin/login" element={<LoginAdmin type="admin" />} />
           <Route path="/admin/:adminId" element={<AdminHome />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route
-            path="/reset_password/:type/:id/:token"
-            element={<ResetPassword />}
-          />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
           {/* <Route path="/forgot-password" element={<ForgotPassword />} />
              <Route path="/verify-otp" element={<VerifyOTP />} />
              <Route path="/reset-password" element={<ResetPassword />} /> */}

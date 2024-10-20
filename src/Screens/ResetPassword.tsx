@@ -1,80 +1,224 @@
-import React, { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react"
+
+import { Link, useNavigate, useParams } from "react-router-dom"
+import axios from "axios"
+import { toast, ToastContainer } from "react-toastify"
+import {
+  Alert,
+  AlertProps,
+  Box,
+  Button,
+  ButtonBase,
+  Container,
+  TextField,
+  Typography,
+} from "@mui/material"
+import InputBox from "../components/input.component"
+
+type Params = {
+  token: string
+}
+
+type CustomAlertProps = AlertProps & { show: boolean; message: string }
 
 const ResetPassword: React.FC = () => {
-  const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState(""); // State สำหรับข้อความผิดพลาด
-  const [successMessage, setSuccessMessage] = useState(""); // State สำหรับข้อความสำเร็จ
-  const navigate = useNavigate();
-  const {type, id, token } = useParams<{type:string, id: string; token: string }>();
+  const navigate = useNavigate()
+  const [isLoadingInitialData, setIsLoadingInitialData] = useState(true)
+  const { token } = useParams<Params>()
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setErrorMessage(""); // ลบข้อความผิดพลาดก่อนหน้า
-    setSuccessMessage(""); // ลบข้อความสำเร็จก่อนหน้า
+  const [newPassword, setNewPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
+  const [alert, setAlert] = useState<CustomAlertProps>({
+    show: false,
+    message: "",
+    severity: "success",
+  })
 
-    if (!id || !token) {
-      setErrorMessage("Invalid reset link."); // แจ้งเตือนหาก id หรือ token ไม่ถูกต้อง
-      return;
+  const callCheckIsTokenValid = () => {
+    setIsLoadingInitialData(true)
+    axios
+      .get(`${process.env.REACT_APP_API_ENDPOINT}/token/check/${token}`)
+      .then(res => {
+        if (!res.data.success) {
+          toast.error(res.data.message)
+
+          setTimeout(() => {
+            navigate("/")
+          }, 3000)
+        }
+
+        return
+      })
+      .catch(err => {
+        toast.error("โทเค็นของคุณไม่ถูกต้อง")
+        setTimeout(() => {
+          navigate("/")
+        }, 3000)
+      })
+    setIsLoadingInitialData(false)
+  }
+
+  useEffect(() => {
+    callCheckIsTokenValid()
+  }, [])
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+
+    if (newPassword !== confirmPassword) {
+      setAlert({
+        show: true,
+        message: "รหัสผ่านไม่ตรงกัน",
+        severity: "error",
+      })
+
+      return
     }
 
-    try {
-      const response = await fetch(
-        `http://localhost:3001/reset_password/${type}/${id}/${token}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ password }),
-        }
-      );
+    // ตรวจสอบเงื่อนไขรหัสผ่าน
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{6,20}$/ // Regex สำหรับรหัสผ่าน
+    if (!passwordRegex.test(newPassword)) {
+      setAlert({
+        show: true,
+        message:
+          "รหัสผ่านต้องมีความยาว 6-20 ตัวอักษรและประกอบด้วยอักษรตัวพิมพ์ใหญ่หนึ่งตัว ตัวพิมพ์เล็กหนึ่งตัว และตัวเลขหนึ่งตัว",
+        severity: "error",
+      })
+      return // หยุดการส่งฟอร์ม
+    }
 
-      if (response.ok) {
-        const data = await response.json();
-        if (data.Status === "Success") {
-          setSuccessMessage("Password reset successfully! Redirecting to login..."); // ข้อความสำเร็จ
-          setTimeout(() => navigate("/signin"), 2000); // นำทางหลัง 2 วินาที
+    axios
+      .post(`${process.env.REACT_APP_API_ENDPOINT}/reset-password`, {
+        token,
+        password: newPassword,
+      })
+      .then(res => {
+        if (res.data.success) {
+          const redirectTo =
+            res.data.role === "admin" ? "/admin/login" : "/signin"
+          toast.success(res.data.message)
+
+          setAlert({
+            show: true,
+            message: res.data.message,
+            severity: "success",
+          })
+
+          setTimeout(() => {
+            navigate(redirectTo)
+          }, 3000)
         } else {
-          setErrorMessage(data.Message); // แสดงข้อความผิดพลาดจากเซิร์ฟเวอร์
+          toast.error(res.data.message)
         }
-      } else {
-        const errorData = await response.json();
-        setErrorMessage(errorData.Message || "An error occurred. Please try again."); // ข้อความผิดพลาด
-      }
-    } catch (error) {
-      setErrorMessage("Error occurred while resetting password. Please try again."); // ข้อความผิดพลาด
-      console.error("Error:", error);
-    }
-  };
+      })
+      .catch(err => {
+        toast.error(err.response.data.message)
+      })
+  }
 
   return (
-    <div className="d-flex justify-content-center align-items-center bg-secondary vh-100">
-      <div className="bg-white p-3 rounded w-25">
-        <h4>Reset Password</h4>
-        {errorMessage && <div className="text-danger">{errorMessage}</div>} {/* แสดงข้อความผิดพลาด */}
-        {successMessage && <div className="text-success">{successMessage}</div>} {/* แสดงข้อความสำเร็จ */}
-        <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <label htmlFor="password">
-              <strong>New Password</strong>
-            </label>
-            <input
-              type="password"
-              placeholder="Enter Password"
-              autoComplete="off"
-              name="password"
-              className="form-control rounded-0"
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-          <button type="submit" className="btn btn-success w-100 rounded-0">
-            Update
-          </button>
-        </form>
-      </div>
-    </div>
-  );
-};
+    <Container
+      maxWidth='xs'
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: "10px",
+      }}
+    >
+      <ToastContainer />
+      <Box
+        sx={{
+          padding: "40px 20px",
+          borderRadius: "8px",
+          backgroundColor: "white",
+          width: "100%",
+          maxWidth: "400px",
+          textAlign: "center",
+        }}
+      >
+        <Typography
+          variant='h4'
+          component='h1'
+          sx={{ marginBottom: "20px", fontWeight: "600" }}
+        >
+          ตั้งค่ารหัสผ่านใหม่
+        </Typography>
 
-export default ResetPassword;
+        <Typography
+          variant='body1'
+          sx={{ marginBottom: "20px", color: "#6c757d" }}
+        >
+          รหัสผ่านใหม่ควรประกอบด้วยตัวอักษรอย่างน้อย 6 ตัว และมีตัวพิมพ์ใหญ่
+          ตัวพิมพ์เล็ก และตัวเลขผสมกัน
+        </Typography>
+
+        {alert.show && (
+          <Alert
+            severity={alert.severity}
+            sx={{ my: "24px", textAlign: "left", borderRadius: "8px" }}
+          >
+            {alert.message}
+          </Alert>
+        )}
+
+        <form onSubmit={handleSubmit}>
+          <InputBox
+            name='password'
+            type='password'
+            id='password'
+            icon='VscKey'
+            placeholder='รหัสผ่านใหม่'
+            value={newPassword}
+            onChange={e => setNewPassword(e.target.value)}
+            disabled={isLoadingInitialData}
+          />
+
+          <InputBox
+            name='confirmPassword'
+            type='password'
+            id='confirmPassword'
+            icon='VscKey'
+            placeholder='ยืนยันรหัสผ่านใหม่'
+            value={confirmPassword}
+            onChange={e => setConfirmPassword(e.target.value)}
+            disabled={isLoadingInitialData}
+          />
+
+          <Button
+            type='submit'
+            variant='contained'
+            fullWidth
+            disableElevation
+            sx={{
+              backgroundColor: "#000",
+              color: "#fff",
+              textTransform: "none",
+              padding: "10px 0",
+              borderRadius: "50px",
+              "&:hover": {
+                backgroundColor: "#181818",
+              },
+            }}
+          >
+            ตั้งค่ารหัสผ่านใหม่
+          </Button>
+        </form>
+
+        <Box sx={{ marginTop: "20px" }}>
+          <Typography variant='body1'>
+            จำรหัสผ่านได้แล้ว?{" "}
+            <Link
+              to='/signin'
+              style={{ color: "#635bff", textDecoration: "none" }}
+            >
+              เข้าสู่ระบบ
+            </Link>
+          </Typography>
+        </Box>
+      </Box>
+    </Container>
+  )
+}
+
+export default ResetPassword

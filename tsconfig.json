@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es6",
     "types": ["node", "react", "react-dom", "js-cookie"],
     "allowJs": true,
     "skipLibCheck": true,

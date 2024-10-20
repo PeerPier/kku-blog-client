@@ -11,8 +11,10 @@ interface InputBoxProps {
   type: string;
   id: string;
   value?: string;
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder: string;
-  icon: string;
+  icon?: string;
+  disabled?: boolean;
 }
 const iconMap: { [key: string]: React.ElementType } = {
   FaUser: FaUser,
@@ -25,10 +27,13 @@ const InputBox: React.FC<InputBoxProps> = ({
   type,
   id,
   value,
+  onChange,
   placeholder,
   icon,
+  disabled = false,
 }) => {
-  const IconComponent = iconMap[icon];
+  
+  const IconComponent = icon ? iconMap[icon] : null;
   const [passwordVisible, setPasswordVisible] = useState(false);
 
   return (
@@ -53,10 +58,12 @@ const InputBox: React.FC<InputBoxProps> = ({
           type === "password" ? (passwordVisible ? "text" : "password") : type
         }
         placeholder={placeholder}
-        defaultValue={value}
+        value={value}
+        onChange={onChange}
         id={id}
         className="input-box"
         style={{ paddingLeft: "48px" }}
+        disabled={disabled}
       />
 
       {type === "password" &&

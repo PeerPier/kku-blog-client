@@ -1,19 +1,20 @@
+import { API_BASE_URL } from "../api/const/apiBaseUrl";
+
 export const uploadImage = async (img: File) => {
   let imgUrl = null;
-  const API_URL = process.env.PUBLIC_APP_ENDPOINT || "https://kku-blog-server.onrender.com";
 
   const formData = new FormData();
   formData.append("file", img);
 
   try {
-    const uploadResponse = await fetch(`${API_URL}/get-upload-picture`, {
+    const uploadResponse = await fetch(`${API_BASE_URL}/get-upload-picture`, {
       method: "POST",
       body: formData,
     });
 
     if (uploadResponse.ok) {
       const { filename } = await uploadResponse.json();
-      imgUrl = `${API_URL}/uploads/${filename}`;
+      imgUrl = `${API_BASE_URL}/uploads/${filename}`;
     } else {
       throw new Error("Error uploading image");
     }

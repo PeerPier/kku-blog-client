@@ -8,7 +8,7 @@ import { UserContext } from "../App";
 import { BlogContext } from "./blog.page";
 import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
-import { API_BASE_URL } from "../api/post";
+import { API_BASE_URL } from "../api/const/apiBaseUrl";
 
 const BlogInteraction = () => {
   const blogContext = useContext(BlogContext);

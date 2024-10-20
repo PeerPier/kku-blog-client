@@ -1,5 +1,5 @@
 import axios from "axios";
-import { API_BASE_URL } from "../api/post";
+import { API_BASE_URL } from "../api/const/apiBaseUrl";
 import { Post } from "../types/post";
 
 interface FilterPaginationDataProps {

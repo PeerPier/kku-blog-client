@@ -1,114 +1,170 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { TextField, Button, Container, Typography } from "@mui/material";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import "../misc/reset-password.css";
+import React, { useState } from "react"
+import { Link, Navigate, useNavigate } from "react-router-dom"
+import {
+  Button,
+  Container,
+  Typography,
+  Box,
+  Alert,
+  AlertProps,
+} from "@mui/material"
+import { toast, ToastContainer } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
+import "../misc/reset-password.css"
+import InputBox from "../components/input.component"
+
+type CustomAlertProps = AlertProps & { show: boolean; message: string }
 
 const ForgotPassword = () => {
-  const [email, setEmail] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const navigate = useNavigate();
+  const navigate = useNavigate()
+  const [email, setEmail] = useState("")
+  const [alert, setAlert] = useState<CustomAlertProps>({
+    show: false,
+    message: "",
+    severity: "success",
+  })
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
 
-    // ตรวจสอบเงื่อนไขรหัสผ่าน
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{6,20}$/; // Regex สำหรับรหัสผ่าน
-    if (!passwordRegex.test(newPassword)) {
-      toast.error(
-        "Password must be 6-20 characters long and include at least one uppercase letter, one lowercase letter, and one number."
-      );
-      return; // หยุดการส่งฟอร์ม
-    }
-
-    fetch("http://localhost:3001/forgot-password", {
+    fetch(`${process.env.REACT_APP_API_ENDPOINT}/forgot-password`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email, newPassword }),
+      body: JSON.stringify({ email }),
       credentials: "include",
     })
-      .then((res) => res.json())
-      .then((data) => {
+      .then(res => res.json())
+      .then(data => {
         if (data.success) {
           toast.success(
-            "Password reset successful! Redirecting you to the Admin login page..."
-          );
-
-          const redirectTo =
-            data.role === "admin" ? "/admin/login" : "/admin/login"; // กลับไปหน้า Admin Login
-          setTimeout(() => {
-            navigate(redirectTo); // นำผู้ใช้ไปยังหน้า login
-          }, 3000); // ใช้ setTimeout เพื่อเลื่อนการนำทาง
+            `เราได้ส่งลิงก์สําหรับตั้งค่ารหัสผ่านใหม่ไปยังอีเมล ${email}`
+          )
+          setAlert({
+            show: true,
+            message: `เราได้ส่งลิงก์สําหรับตั้งค่ารหัสผ่านใหม่ไปยังอีเมล ${email} รหัสอ้างอิง (${data.ref})`,
+            severity: "success",
+          })
         } else {
-          toast.error(data.message);
+          toast.error(data.message)
         }
       })
-      .catch((err) => toast.error("An error occurred. Please try again."));
-  };
+      .catch(err => toast.error("เกิดข้อผิดพลาด โปรดลองใหม่อีกครั้ง"))
+  }
 
   return (
     <Container
-      maxWidth="sm"
-      className="d-flex justify-content-center align-items-center vh-100 reset-password"
-      style={{ padding: "5%" }}
+      maxWidth='xs'
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: "10px",
+      }}
     >
       <ToastContainer />
-      <div className="form-reset" style={{ boxShadow: "1px solid gray" }}>
+      <Box
+        sx={{
+          padding: "40px 20px",
+          borderRadius: "8px",
+          backgroundColor: "white",
+          width: "100%",
+          maxWidth: "400px",
+          textAlign: "center",
+        }}
+      >
         <Typography
-          variant="h5"
-          align="center"
-          sx={{ padding: "25px 0", fontWeight: "900" }} // เพิ่ม padding ด้านบนและด้านล่าง
+          variant='h4'
+          component='h1'
+          sx={{ marginBottom: "20px", fontWeight: "600" }}
         >
-          Reset Password
+          ป้อนอีเมลของคุณ
         </Typography>
 
-        <form onSubmit={handleSubmit}>
-          <label>Email</label>
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Email"
-            variant="outlined"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <label>New Password</label>
-          <TextField
-            fullWidth
-            margin="normal"
-            label="New Password"
-            variant="outlined"
-            type="password"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            required
-          />
-          <Button
-            type="submit"
-            variant="contained"
-            fullWidth
-            className="mt-2"
-            sx={{
-              backgroundColor: "#151111",
-              color: "#FFFFFF",
-              "&:hover": {
-                backgroundColor: "#151111",
-              },
-              marginY: "20px",
-              textTransform: "none", // ป้องกันไม่ให้ข้อความแสดงเป็นตัวอักษรใหญ่ทั้งหมด
-            }}
-          >
-            Reset
-          </Button>
-        </form>
-      </div>
-    </Container>
-  );
-};
+        <Typography
+          variant='body1'
+          sx={{ marginBottom: "20px", color: "#6c757d" }}
+        >
+          ป้อนที่อยู่อีเมลที่เชื่อมต่อกับบัญชีของคุณ
+          แล้วเราจะส่งลิงก์สำหรับตั้งค่ารหัสผ่านใหม่ให้แก่คุณ
+        </Typography>
 
-export default ForgotPassword;
+        {alert.show && (
+          <Alert
+            severity={alert.severity}
+            sx={{ my: "24px", textAlign: "left", borderRadius: "8px" }}
+          >
+            {alert.message}
+          </Alert>
+        )}
+
+        <form onSubmit={handleSubmit}>
+          <InputBox
+            name='email'
+            type='email'
+            id='email'
+            placeholder='อีเมล'
+            icon='MdOutlineMail'
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            disabled={alert.show}
+          />
+
+          {alert.show ? (
+            <Button
+              variant='contained'
+              fullWidth
+              disableElevation
+              onClick={() => navigate("/")}
+              sx={{
+                backgroundColor: "#000",
+                color: "#fff",
+                textTransform: "none",
+                padding: "10px 0",
+                borderRadius: "50px",
+                "&:hover": {
+                  backgroundColor: "#181818",
+                },
+              }}
+            >
+              กลับไปหน้าหลัก
+            </Button>
+          ) : (
+            <Button
+              type='submit'
+              variant='contained'
+              fullWidth
+              disableElevation
+              sx={{
+                backgroundColor: "#000",
+                color: "#fff",
+                textTransform: "none",
+                padding: "10px 0",
+                borderRadius: "50px",
+                "&:hover": {
+                  backgroundColor: "#181818",
+                },
+              }}
+            >
+              ดำเนินการต่อ
+            </Button>
+          )}
+        </form>
+        <Box sx={{ marginTop: "20px" }}>
+          <Typography variant='body1'>
+            ยังไม่มีบัญชีใช่ไหม?{" "}
+            <Link
+              to='/signup'
+              style={{ color: "#635bff", textDecoration: "none" }}
+            >
+              ลงทะเบียน
+            </Link>
+          </Typography>
+        </Box>
+      </Box>
+    </Container>
+  )
+}
+
+export default ForgotPassword

@@ -1,12 +1,13 @@
 import { useCallback, useMemo, useState } from "react";
 import { fetchFollow, fetchProfile } from "../api/follow";
 import { Button, Modal } from "react-bootstrap";
+import { Link } from "react-router-dom";
+import { API_BASE_URL } from "../api/const/apiBaseUrl";
 
 export function FollowingModal({ userProfile }: any) {
   const [smShow, setSmShow] = useState(false);
   const [myUser, setMyUser] = useState<any>(null);
   const [isFollowingModal, setIsFollowingModal] = useState<boolean>(false);
-  const [profileDataArray, setProfileDataArray] = useState<any[]>([]);
   const [currentUser, setCurrentUser] = useState<any>([]);
 
   const handleButtonClick = async () => {
@@ -38,9 +39,9 @@ export function FollowingModal({ userProfile }: any) {
   }, [userProfile, myUser, isFollowingModal]);
 
   const handleFollow = useCallback(async (you: string) => {
-    const API_BASE_URL = "http://localhost:3001/follow";
+    const URL = `${API_BASE_URL}/follow`;
     try {
-      const response = await fetch(API_BASE_URL, {
+      const response = await fetch(URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -66,7 +67,7 @@ export function FollowingModal({ userProfile }: any) {
   }, []);
 
   const handleUnfollow = useCallback(async (you: string) => {
-    const API_BASE_URL_DELETE = "http://localhost:3001/follow/delete";
+    const API_BASE_URL_DELETE = `${API_BASE_URL}/follow/delete`;
     try {
       const response = await fetch(API_BASE_URL_DELETE, {
         method: "DELETE",

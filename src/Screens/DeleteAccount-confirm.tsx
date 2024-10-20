@@ -1,19 +1,18 @@
-import React, { useState } from "react";
-import { Modal, Button, Form } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import React, { useState } from "react"
+import { Modal, Button, Form } from "react-bootstrap"
+import { Link, useNavigate } from "react-router-dom"
+import axios from "axios"
+import { API_BASE_URL } from "../api/const/apiBaseUrl"
 
 const DeleteAccountModal: React.FC<{
-  userId: string | null;
-  show: boolean;
-  onClose: () => void;
-  onDeleteSuccess: () => void;
+  userId: string | null
+  show: boolean
+  onClose: () => void
+  onDeleteSuccess: () => void
 }> = ({ userId, show, onClose, onDeleteSuccess }) => {
-  const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
-  const API_BASE_URL = process.env.PUBLIC_APP_ENDPOINT || "https://kku-blog-server.onrender.com";
-  const navigate = useNavigate();
+  const [password, setPassword] = useState("")
+  const [errorMessage, setErrorMessage] = useState("")
+  const [successMessage, setSuccessMessage] = useState("")
 
   const handleDeleteAccount = async () => {
     try {
@@ -22,21 +21,21 @@ const DeleteAccountModal: React.FC<{
         {
           data: { password },
         }
-      );
+      )
 
       if (response.data.message === "User deleted successfully") {
-        setSuccessMessage("Account deleted successfully!");
-        setErrorMessage("");
-        onDeleteSuccess();
-        localStorage.removeItem("userId");
-        sessionStorage.removeItem("userId");
+        setSuccessMessage("Account deleted successfully!")
+        setErrorMessage("")
+        onDeleteSuccess()
+        localStorage.removeItem("userId")
+        sessionStorage.removeItem("userId")
       } else {
-        setErrorMessage(response.data.error);
+        setErrorMessage(response.data.error)
       }
     } catch (error) {
-      setErrorMessage("Error deleting account. Please check your password.");
+      setErrorMessage("Error deleting account. Please check your password.")
     }
-  };
+  }
 
   return (
     <Modal show={show} onHide={onClose}>
@@ -49,30 +48,30 @@ const DeleteAccountModal: React.FC<{
           undone.
         </p>
         <Form>
-          <Form.Group controlId="password">
+          <Form.Group controlId='password'>
             <Form.Label>Enter your password to confirm</Form.Label>
             <Form.Control
-              type="password"
-              placeholder="Enter your password"
+              type='password'
+              placeholder='Enter your password'
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={e => setPassword(e.target.value)}
             />
           </Form.Group>
 
-          {errorMessage && <p className="text-danger">{errorMessage}</p>}
-          {successMessage && <p className="text-success">{successMessage}</p>}
+          {errorMessage && <p className='text-danger'>{errorMessage}</p>}
+          {successMessage && <p className='text-success'>{successMessage}</p>}
         </Form>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={onClose}>
+        <Button variant='secondary' onClick={onClose}>
           Cancel
         </Button>
-        <Button variant="danger" onClick={handleDeleteAccount}>
+        <Button variant='danger' onClick={handleDeleteAccount}>
           Delete Account
         </Button>
       </Modal.Footer>
     </Modal>
-  );
-};
+  )
+}
 
-export default DeleteAccountModal;
+export default DeleteAccountModal

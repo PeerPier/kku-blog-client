@@ -1,11 +1,10 @@
-import { Post } from "../types/post";
-import { User } from "../types/user";
-
-const API_BASE_URL = process.env.PUBLIC_APP_ENDPOINT || "https://kku-blog-server.onrender.com";
+import { Post } from "../types/post"
+import { User } from "../types/user"
+import { API_BASE_URL } from "./const/apiBaseUrl"
 
 export const searchPost = async (query: string): Promise<Post[]> => {
   try {
-    const encodedQuery = encodeURIComponent(query);
+    const encodedQuery = encodeURIComponent(query)
     const response = await fetch(
       `${API_BASE_URL}/posts/search?query=${encodedQuery}`,
       {
@@ -14,34 +13,34 @@ export const searchPost = async (query: string): Promise<Post[]> => {
           "Content-Type": "application/json",
         },
       }
-    );
+    )
 
     if (!response.ok) {
-      const statusText = response.statusText || "Unknown Error";
-      throw new Error(`Server returned ${response.status} ${statusText}`);
+      const statusText = response.statusText || "Unknown Error"
+      throw new Error(`Server returned ${response.status} ${statusText}`)
     }
 
-    const contentType = response.headers.get("content-type");
+    const contentType = response.headers.get("content-type")
     if (!contentType || !contentType.includes("application/json")) {
-      const responseData = await response.text();
-      console.error("Unexpected content type:", contentType);
-      return [];
+      const responseData = await response.text()
+      console.error("Unexpected content type:", contentType)
+      return []
     }
 
-    const responseData: Post[] = await response.json(); // กำหนดประเภทที่ถูกต้อง
-    return responseData;
+    const responseData: Post[] = await response.json() // กำหนดประเภทที่ถูกต้อง
+    return responseData
   } catch (error) {
-    console.error("Error:", (error as Error).message);
+    console.error("Error:", (error as Error).message)
 
     if (error instanceof TypeError) {
-      console.error("Network error or CORS issue");
+      console.error("Network error or CORS issue")
     } else if (error instanceof SyntaxError) {
-      console.error("Error parsing JSON response");
+      console.error("Error parsing JSON response")
     }
 
-    return [];
+    return []
   }
-};
+}
 
 export const searchUsers = async (query: string): Promise<User[]> => {
   try {
@@ -53,31 +52,31 @@ export const searchUsers = async (query: string): Promise<User[]> => {
           "Content-Type": "application/json",
         },
       }
-    );
+    )
 
     if (!response.ok) {
-      const statusText = response.statusText || "Unknown Error";
-      throw new Error(`Server returned ${response.status} ${statusText}`);
+      const statusText = response.statusText || "Unknown Error"
+      throw new Error(`Server returned ${response.status} ${statusText}`)
     }
 
-    const contentType = response.headers.get("content-type");
+    const contentType = response.headers.get("content-type")
     if (!contentType || !contentType.includes("application/json")) {
-      const responseData = await response.text();
-      console.error("Unexpected content type:", contentType);
-      return [];
+      const responseData = await response.text()
+      console.error("Unexpected content type:", contentType)
+      return []
     }
 
-    const responseData = await response.json();
-    return responseData; // ควรจะเป็น User[] ตามที่กำหนดไว้ใน backend
+    const responseData = await response.json()
+    return responseData // ควรจะเป็น User[] ตามที่กำหนดไว้ใน backend
   } catch (error) {
-    console.error("Error:", (error as Error).message);
+    console.error("Error:", (error as Error).message)
 
     if (error instanceof TypeError) {
-      console.error("Network error or CORS issue");
+      console.error("Network error or CORS issue")
     } else if (error instanceof SyntaxError) {
-      console.error("Error parsing JSON response");
+      console.error("Error parsing JSON response")
     }
 
-    return [];
+    return []
   }
-};
+}

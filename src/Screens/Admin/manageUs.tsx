@@ -17,7 +17,7 @@ interface User {
 }
 
 const ManageUser: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
+  const { adminId } = useParams<{ adminId: string }>();
   const [adminProfile, setAdminProfile] = useState<any>(null);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -34,8 +34,8 @@ const ManageUser: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (id) {
-          const profileData = await fetchAdminProfile(id);
+        if (adminId) {
+          const profileData = await fetchAdminProfile(adminId);
           setUsername(profileData.username);
           setAdminProfile(profileData);
           setEmail(profileData.email);
@@ -52,7 +52,7 @@ const ManageUser: React.FC = () => {
     };
 
     fetchData();
-  }, [id]);
+  }, [adminId]);
 
   const handleEditUser = (userId: string) => {
     console.log("Edit user with ID:", userId);
