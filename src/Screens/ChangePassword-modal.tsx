@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import axios from "axios";
+import "../misc/AccountPreferences.css";
 import { API_BASE_URL } from "../api/const/apiBaseUrl";
 
 const ChangePasswordModal: React.FC<{
@@ -78,24 +79,23 @@ const ChangePasswordModal: React.FC<{
   }, [countdown, successMessage, onClose]);
 
   return (
-    <Modal show={show} onHide={onClose}>
+    <Modal show={show} onHide={onClose} centered>
       <Modal.Header closeButton>
-        <Modal.Title>Change Password</Modal.Title>
+        <Modal.Title>เปลี่นรหัสผ่าน</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form>
           <Form.Group controlId="oldPassword">
-            <Form.Label>Old Password</Form.Label>
+            <Form.Label>รหัสผ่านเก่า</Form.Label>
             <Form.Control
               type="password"
-              placeholder="Enter Old Password"
               value={oldPassword}
               onChange={(e) => setOldPassword(e.target.value)}
             />
           </Form.Group>
 
           <Form.Group controlId="newPassword">
-            <Form.Label>New Password</Form.Label>
+            <Form.Label>รหัสผ่านใหม่</Form.Label>
             <Form.Control
               type="password"
               placeholder="Enter New Password"
@@ -105,7 +105,7 @@ const ChangePasswordModal: React.FC<{
           </Form.Group>
 
           <Form.Group controlId="confirmPassword">
-            <Form.Label>Confirm New Password</Form.Label>
+            <Form.Label>ยืนยันรหัสผ่านใหม่</Form.Label>
             <Form.Control
               type="password"
               placeholder="Confirm New Password"
@@ -124,12 +124,21 @@ const ChangePasswordModal: React.FC<{
         </Form>
       </Modal.Body>
       <Modal.Footer>
+      <Button
+          style={{
+            backgroundColor: "#333" /* สีพื้นหลัง */,
+            color: "white" /* สีข้อความ */,
+            borderRadius: "8px" /* มุมโค้ง */,
+            padding: "10px 20px" /* ขนาด padding */,
+            border: "none" /* ไม่มีเส้นขอบ */,
+            textTransform: "none" /* ข้อความไม่เปลี่ยนรูปแบบ */,
+          }}onClick={handleSave}>
+          ยืนยัน
+        </Button>
         <Button variant="secondary" onClick={onClose}>
-          Cancel
+          ยกเลิก
         </Button>
-        <Button variant="primary" onClick={handleSave}>
-          Save changes
-        </Button>
+        
       </Modal.Footer>
     </Modal>
   );

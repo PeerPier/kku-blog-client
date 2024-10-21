@@ -14,6 +14,7 @@
   border-bottom: 1px solid #e0e0e0;
   background-color: white;
 }
+
 .search-container {
   position: absolute;
   background-color: white;
@@ -53,8 +54,6 @@
   width: 100%;
   background-color: #f0f0f0;
   padding: 1rem;
-  padding-left: 1.5rem;
-  padding-right: 12%;
   border-radius: 9999px;
   color: #333;
 }
@@ -154,8 +153,13 @@
 .button-noti:hover {
   background-color: rgba(0, 0, 0, 0.1);
 }
-
+p {
+  font-size: 16px;
+}
 @media (min-width: 768px) {
+  link {
+    font-size: 16px;
+  }
   .search-container {
     border: none;
     display: block;
@@ -192,4 +196,33 @@
   /* .toggle-search button {
     display: none;
   } */
+}
+
+/* สำหรับหน้าจอขนาดเล็กกว่า 768px */
+@media (max-width: 768px) {
+  .btn-dark,
+  .btn-light {
+    font-size: 10px; /* ขนาดฟอนต์เมื่อหน้าจอเล็กลง */
+    padding: 8px;
+  }
+
+  .search-input {
+    width: 100%;
+    background-color: #f0f0f0;
+    padding: 8px;
+  }
+  .logo-link {
+    width: 20px;
+  }
+  .logo-link img {
+    width: 120px;
+  }
+  .toggle-icon {
+    font-size: 16px;
+    padding: 0;
+  }
+  .toggle-search {
+    padding: 0px;
+    height: 20px;
+  }
 }

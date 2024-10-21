@@ -59,7 +59,7 @@ function Navbar() {
       >
         <input
           type="text"
-          placeholder="Search..."
+          placeholder="ค้นหา..."
           className="search-input"
           onKeyDown={handleSearch}
         />

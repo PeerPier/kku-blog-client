@@ -100,12 +100,12 @@ const AccountPreferences: React.FC = () => {
   return (
     <AnimationWrapper>
       <div className="account-preferences-container">
-        <h1>Account Settings</h1>
+        <h4>ตั้งค่าบัญชีผู้ใช้</h4>
         <div className="account-preferences-box">
           <form>
             {/* Email */}
             <div className="input-group">
-              <label htmlFor="email">Email Address</label>
+              <label htmlFor="email">อีเมล</label>
               <input
                 type="email"
                 id="email"
@@ -126,12 +126,12 @@ const AccountPreferences: React.FC = () => {
                   }
                 }}
               >
-                Change Email
+                เปลี่ยนอีเมล
               </span>
             </div>
             {/* Password */}
             <div className="input-group">
-              <label htmlFor="password">Password</label>
+              <label htmlFor="password">รหัสผ่าน</label>
               <input type="password" id="password" value="********" readOnly />
               <span
                 className="change-link"
@@ -146,48 +146,45 @@ const AccountPreferences: React.FC = () => {
                   }
                 }}
               >
-                Change Password
+                เปลี่ยนรหัสผ่าน
               </span>
             </div>
             <div className="on-offnoti">
-              <p>Notifications</p>
+              <p>การแจ้งเตือน</p>
               <div
                 className={`switch ${newNotificationSetting ? "on" : "off"}`}
                 onClick={toggleSwitch}
               >
                 <div className="toggle-ball"></div>
                 <span className="label">
-                  {newNotificationSetting ? "ON" : "OFF"}
+                  {newNotificationSetting ? "เปิด" : "ปิด"}
                 </span>
               </div>
             </div>
+            <p style={{ color: "black", marginTop: "20px" }}>ลบบัญชีผู้ใช้</p>
             <p
               className="delete-account"
               onClick={() => setShowDeleteModal(true)}
             >
-              Delete Your Account
-            </p>
-            <p className="delete-info">
-              You will receive an email to confirm your decision. Please note
-              that all boards you have created will be permanently erased.
+              ลบบัญชีของคุณและข้อมูลบัญชีของคุณ
             </p>
 
             <div className="action-buttons">
+              <Button
+                type="button"
+                className="save-button"
+                onClick={handleSaveNotificationSettings}
+                style={{ backgroundColor: "#333" }}
+              >
+                ยืนยัน
+              </Button>
               <Button
                 variant="secondary"
                 type="button"
                 className="cancel-button"
                 href="/"
               >
-                Cancel
-              </Button>
-              <Button
-                type="button"
-                className="save-button"
-                onClick={handleSaveNotificationSettings}
-                style={{backgroundColor:"#333"}}
-              >
-                Save
+                ยกเลิก
               </Button>
             </div>
           </form>
@@ -199,7 +196,6 @@ const AccountPreferences: React.FC = () => {
           onClose={() => setShowEmailModal(false)}
           onSave={handleSaveEmail}
           oldEmail={userData.email}
-          
         />
 
         {/* Change Password Modal */}

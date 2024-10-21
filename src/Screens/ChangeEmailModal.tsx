@@ -1,4 +1,5 @@
 import React from "react";
+import "../misc/AccountPreferences.css";
 import { Modal, Button } from "react-bootstrap";
 
 interface ChangeEmailModalProps {
@@ -26,9 +27,9 @@ const ChangeEmailModal: React.FC<ChangeEmailModalProps> = ({
   };
 
   return (
-    <Modal show={show} onHide={onClose}>
+    <Modal show={show} onHide={onClose} centered>
       <Modal.Header closeButton>
-        <Modal.Title>Change Email</Modal.Title>
+        <Modal.Title>เปลี่ยนอีเมล</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <input
@@ -40,12 +41,21 @@ const ChangeEmailModal: React.FC<ChangeEmailModalProps> = ({
         />
       </Modal.Body>
       <Modal.Footer>
+      <Button
+          style={{
+            backgroundColor: "#333" /* สีพื้นหลัง */,
+            color: "white" /* สีข้อความ */,
+            borderRadius: "8px" /* มุมโค้ง */,
+            padding: "10px 20px" /* ขนาด padding */,
+            border: "none" /* ไม่มีเส้นขอบ */,
+            textTransform: "none" /* ข้อความไม่เปลี่ยนรูปแบบ */,
+          }}onClick={handleSave}>
+          ยืนยัน
+        </Button>
         <Button variant="secondary" onClick={onClose}>
-          Cancel
+         ยกเลิก
         </Button>
-        <Button variant="primary" onClick={handleSave}>
-          Save
-        </Button>
+        
       </Modal.Footer>
     </Modal>
   );
