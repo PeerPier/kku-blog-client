@@ -113,6 +113,7 @@ export function FollowingModal({ userProfile }: any) {
         <Modal.Header closeButton>
           <Modal.Title id="example-modal-sizes-title-sm">following</Modal.Title>
         </Modal.Header>
+        
         <Modal.Body>
           {currentUser?.following?.map((c: any) => (
             <div

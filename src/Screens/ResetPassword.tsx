@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react";
 
-import { Link, useNavigate, useParams } from "react-router-dom"
-import axios from "axios"
-import { toast, ToastContainer } from "react-toastify"
+import { Link, useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
 import {
   Alert,
   AlertProps,
@@ -12,79 +12,79 @@ import {
   Container,
   TextField,
   Typography,
-} from "@mui/material"
-import InputBox from "../components/input.component"
+} from "@mui/material";
+import InputBox from "../components/input.component";
 
 type Params = {
-  token: string
-}
+  token: string;
+};
 
-type CustomAlertProps = AlertProps & { show: boolean; message: string }
+type CustomAlertProps = AlertProps & { show: boolean; message: string };
 
 const ResetPassword: React.FC = () => {
-  const navigate = useNavigate()
-  const [isLoadingInitialData, setIsLoadingInitialData] = useState(true)
-  const { token } = useParams<Params>()
+  const navigate = useNavigate();
+  const [isLoadingInitialData, setIsLoadingInitialData] = useState(true);
+  const { token } = useParams<Params>();
 
-  const [newPassword, setNewPassword] = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [alert, setAlert] = useState<CustomAlertProps>({
     show: false,
     message: "",
     severity: "success",
-  })
+  });
 
   const callCheckIsTokenValid = () => {
-    setIsLoadingInitialData(true)
+    setIsLoadingInitialData(true);
     axios
       .get(`${process.env.REACT_APP_API_ENDPOINT}/token/check/${token}`)
-      .then(res => {
+      .then((res) => {
         if (!res.data.success) {
-          toast.error(res.data.message)
+          toast.error(res.data.message);
 
           setTimeout(() => {
-            navigate("/")
-          }, 3000)
+            navigate("/");
+          }, 3000);
         }
 
-        return
+        return;
       })
-      .catch(err => {
-        toast.error("โทเค็นของคุณไม่ถูกต้อง")
+      .catch((err) => {
+        toast.error("โทเค็นของคุณไม่ถูกต้อง");
         setTimeout(() => {
-          navigate("/")
-        }, 3000)
-      })
-    setIsLoadingInitialData(false)
-  }
+          navigate("/");
+        }, 3000);
+      });
+    setIsLoadingInitialData(false);
+  };
 
   useEffect(() => {
-    callCheckIsTokenValid()
-  }, [])
+    callCheckIsTokenValid();
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
     if (newPassword !== confirmPassword) {
       setAlert({
         show: true,
         message: "รหัสผ่านไม่ตรงกัน",
         severity: "error",
-      })
+      });
 
-      return
+      return;
     }
 
     // ตรวจสอบเงื่อนไขรหัสผ่าน
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{6,20}$/ // Regex สำหรับรหัสผ่าน
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{6,20}$/; // Regex สำหรับรหัสผ่าน
     if (!passwordRegex.test(newPassword)) {
       setAlert({
         show: true,
         message:
           "รหัสผ่านต้องมีความยาว 6-20 ตัวอักษรและประกอบด้วยอักษรตัวพิมพ์ใหญ่หนึ่งตัว ตัวพิมพ์เล็กหนึ่งตัว และตัวเลขหนึ่งตัว",
         severity: "error",
-      })
-      return // หยุดการส่งฟอร์ม
+      });
+      return; // หยุดการส่งฟอร์ม
     }
 
     axios
@@ -92,38 +92,38 @@ const ResetPassword: React.FC = () => {
         token,
         password: newPassword,
       })
-      .then(res => {
+      .then((res) => {
         if (res.data.success) {
           const redirectTo =
-            res.data.role === "admin" ? "/admin/login" : "/signin"
-          toast.success(res.data.message)
+            res.data.role === "admin" ? "/admin/login" : "/signin";
+          toast.success(res.data.message);
 
           setAlert({
             show: true,
             message: res.data.message,
             severity: "success",
-          })
+          });
 
           setTimeout(() => {
-            navigate(redirectTo)
-          }, 3000)
+            navigate(redirectTo);
+          }, 3000);
         } else {
-          toast.error(res.data.message)
+          toast.error(res.data.message);
         }
       })
-      .catch(err => {
-        toast.error(err.response.data.message)
-      })
-  }
+      .catch((err) => {
+        toast.error(err.response.data.message);
+      });
+  };
 
   return (
     <Container
-      maxWidth='xs'
+      maxWidth="xs"
       sx={{
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        padding: "10px",
+        minHeight: "90vh",  //
       }}
     >
       <ToastContainer />
@@ -138,15 +138,15 @@ const ResetPassword: React.FC = () => {
         }}
       >
         <Typography
-          variant='h4'
-          component='h1'
+          variant="h4"
+          component="h1"
           sx={{ marginBottom: "20px", fontWeight: "600" }}
         >
           ตั้งค่ารหัสผ่านใหม่
         </Typography>
 
         <Typography
-          variant='body1'
+          variant="body1"
           sx={{ marginBottom: "20px", color: "#6c757d" }}
         >
           รหัสผ่านใหม่ควรประกอบด้วยตัวอักษรอย่างน้อย 6 ตัว และมีตัวพิมพ์ใหญ่
@@ -164,30 +164,30 @@ const ResetPassword: React.FC = () => {
 
         <form onSubmit={handleSubmit}>
           <InputBox
-            name='password'
-            type='password'
-            id='password'
-            icon='VscKey'
-            placeholder='รหัสผ่านใหม่'
+            name="password"
+            type="password"
+            id="password"
+            icon="VscKey"
+            placeholder="รหัสผ่านใหม่"
             value={newPassword}
-            onChange={e => setNewPassword(e.target.value)}
+            onChange={(e) => setNewPassword(e.target.value)}
             disabled={isLoadingInitialData}
           />
 
           <InputBox
-            name='confirmPassword'
-            type='password'
-            id='confirmPassword'
-            icon='VscKey'
-            placeholder='ยืนยันรหัสผ่านใหม่'
+            name="confirmPassword"
+            type="password"
+            id="confirmPassword"
+            icon="VscKey"
+            placeholder="ยืนยันรหัสผ่านใหม่"
             value={confirmPassword}
-            onChange={e => setConfirmPassword(e.target.value)}
+            onChange={(e) => setConfirmPassword(e.target.value)}
             disabled={isLoadingInitialData}
           />
 
           <Button
-            type='submit'
-            variant='contained'
+            type="submit"
+            variant="contained"
             fullWidth
             disableElevation
             sx={{
@@ -206,10 +206,10 @@ const ResetPassword: React.FC = () => {
         </form>
 
         <Box sx={{ marginTop: "20px" }}>
-          <Typography variant='body1'>
+          <Typography variant="body1">
             จำรหัสผ่านได้แล้ว?{" "}
             <Link
-              to='/signin'
+              to="/admin/login"
               style={{ color: "#635bff", textDecoration: "none" }}
             >
               เข้าสู่ระบบ
@@ -218,7 +218,7 @@ const ResetPassword: React.FC = () => {
         </Box>
       </Box>
     </Container>
-  )
-}
+  );
+};
 
-export default ResetPassword
+export default ResetPassword;

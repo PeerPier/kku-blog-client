@@ -1,5 +1,5 @@
-import React, { useState } from "react"
-import { Link, Navigate, useNavigate } from "react-router-dom"
+import React, { useState } from "react";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import {
   Button,
   Container,
@@ -7,25 +7,25 @@ import {
   Box,
   Alert,
   AlertProps,
-} from "@mui/material"
-import { toast, ToastContainer } from "react-toastify"
-import "react-toastify/dist/ReactToastify.css"
-import "../misc/reset-password.css"
-import InputBox from "../components/input.component"
+} from "@mui/material";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "../misc/reset-password.css";
+import InputBox from "../components/input.component";
 
-type CustomAlertProps = AlertProps & { show: boolean; message: string }
+type CustomAlertProps = AlertProps & { show: boolean; message: string };
 
 const ForgotPassword = () => {
-  const navigate = useNavigate()
-  const [email, setEmail] = useState("")
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
   const [alert, setAlert] = useState<CustomAlertProps>({
     show: false,
     message: "",
     severity: "success",
-  })
+  });
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
     fetch(`${process.env.REACT_APP_API_ENDPOINT}/forgot-password`, {
       method: "POST",
@@ -35,31 +35,32 @@ const ForgotPassword = () => {
       body: JSON.stringify({ email }),
       credentials: "include",
     })
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         if (data.success) {
           toast.success(
             `เราได้ส่งลิงก์สําหรับตั้งค่ารหัสผ่านใหม่ไปยังอีเมล ${email}`
-          )
+          );
           setAlert({
             show: true,
             message: `เราได้ส่งลิงก์สําหรับตั้งค่ารหัสผ่านใหม่ไปยังอีเมล ${email} รหัสอ้างอิง (${data.ref})`,
             severity: "success",
-          })
+          });
         } else {
-          toast.error(data.message)
+          toast.error(data.message);
         }
       })
-      .catch(err => toast.error("เกิดข้อผิดพลาด โปรดลองใหม่อีกครั้ง"))
-  }
+      .catch((err) => toast.error("เกิดข้อผิดพลาด โปรดลองใหม่อีกครั้ง"));
+  };
 
   return (
     <Container
-      maxWidth='xs'
+      maxWidth="xs"
       sx={{
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        minHeight: "90vh", // เพิ่มความสูงเต็มหน้าจอ
         padding: "10px",
       }}
     >
@@ -75,15 +76,15 @@ const ForgotPassword = () => {
         }}
       >
         <Typography
-          variant='h4'
-          component='h1'
+          variant="h4"
+          component="h1"
           sx={{ marginBottom: "20px", fontWeight: "600" }}
         >
           ป้อนอีเมลของคุณ
         </Typography>
 
         <Typography
-          variant='body1'
+          variant="body1"
           sx={{ marginBottom: "20px", color: "#6c757d" }}
         >
           ป้อนที่อยู่อีเมลที่เชื่อมต่อกับบัญชีของคุณ
@@ -101,19 +102,19 @@ const ForgotPassword = () => {
 
         <form onSubmit={handleSubmit}>
           <InputBox
-            name='email'
-            type='email'
-            id='email'
-            placeholder='อีเมล'
-            icon='MdOutlineMail'
+            name="email"
+            type="email"
+            id="email"
+            placeholder="อีเมล"
+            icon="MdOutlineMail"
             value={email}
-            onChange={e => setEmail(e.target.value)}
+            onChange={(e) => setEmail(e.target.value)}
             disabled={alert.show}
           />
 
           {alert.show ? (
             <Button
-              variant='contained'
+              variant="contained"
               fullWidth
               disableElevation
               onClick={() => navigate("/")}
@@ -132,8 +133,8 @@ const ForgotPassword = () => {
             </Button>
           ) : (
             <Button
-              type='submit'
-              variant='contained'
+              type="submit"
+              variant="contained"
               fullWidth
               disableElevation
               sx={{
@@ -152,19 +153,18 @@ const ForgotPassword = () => {
           )}
         </form>
         <Box sx={{ marginTop: "20px" }}>
-          <Typography variant='body1'>
-            ยังไม่มีบัญชีใช่ไหม?{" "}
+          <Typography variant="body1">
             <Link
-              to='/signup'
+              to="/admin/login"
               style={{ color: "#635bff", textDecoration: "none" }}
             >
-              ลงทะเบียน
+              ย้อนกลับ
             </Link>
           </Typography>
         </Box>
       </Box>
     </Container>
-  )
-}
+  );
+};
 
-export default ForgotPassword
+export default ForgotPassword;

@@ -165,7 +165,7 @@ const Login: React.FC<LoginPageProps> = ({ type }) => {
                   <img src={logohead} alt="easyclass" />
                 </div>
 
-                <div className="heading" style={{textAlign:"center"}}>
+                <div className="heading" style={{ textAlign: "center" }}>
                   <h4>ยินดีต้อนรับผู้ดูแลระบบ</h4>
                 </div>
 
@@ -206,7 +206,6 @@ const Login: React.FC<LoginPageProps> = ({ type }) => {
                 </div>
               </form>
             </div>
-
           </div>
         </div>
       </main>

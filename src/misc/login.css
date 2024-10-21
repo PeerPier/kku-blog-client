@@ -15,12 +15,11 @@ input {
 
 main {
   width: 100%;
-  min-height: 100vh;
+  min-height: 90vh;
   background-color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(to right, aliceblue, #f9f0ff);
 }
 
 .box {
@@ -32,6 +31,7 @@ main {
   border-radius: 3.3rem;
   box-shadow: 0 10px 10px -10px rgba(0, 0, 0, 0.27);
   padding: 3rem; /* Adjusted padding for inner spacing */
+  background: linear-gradient(to right, aliceblue, #f9f0ff);
 }
 
 .inner-box {

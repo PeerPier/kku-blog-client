@@ -235,7 +235,8 @@ const ProfilePage = () => {
       {loading ? (
         <Loader />
       ) : profile_username.length ? (
-        <section className='h-cover d-md-flex flex-row-reverse align-items-start profilepage '>
+        <section className='h-cover d-md-flex flex-row-reverse align-items-start profilepage '
+        style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }} >
           <div className='d-flex flex-column profile_img gap-1 text-center'>
             <img src={profile_picture} alt='' className='rounded-circle ' />
 

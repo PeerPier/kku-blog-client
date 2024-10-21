@@ -56,12 +56,18 @@
 }
 .profile_img {
   min-width: 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* จัดให้อยู่ตรงกลางแนวนอน */
+  justify-content: center; /* จัดให้อยู่ตรงกลางแนวตั้ง */
 }
 .profile_img > img {
   width: 10rem;
   height: 10rem;
   background-color: #f0f0f0;
 }
+
+
 
 @media (max-width: 768px) {
   .profile_img {
